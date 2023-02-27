@@ -17,11 +17,11 @@ class Glucose
     #[ORM\Column]
     private ?float $taux = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $horaire = null;
-
     #[ORM\Column]
     private ?bool $ajeun = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $horaire = null;
 
     public function getId(): ?int
     {
@@ -40,18 +40,6 @@ class Glucose
         return $this;
     }
 
-    public function getHoraire(): ?\DateTimeInterface
-    {
-        return $this->horaire;
-    }
-
-    public function setHoraire(\DateTimeInterface $horaire): self
-    {
-        $this->horaire = $horaire;
-
-        return $this;
-    }
-
     public function isAjeun(): ?bool
     {
         return $this->ajeun;
@@ -60,6 +48,18 @@ class Glucose
     public function setAjeun(bool $ajeun): self
     {
         $this->ajeun = $ajeun;
+
+        return $this;
+    }
+
+    public function getHoraire(): ?\DateTimeInterface
+    {
+        return $this->horaire;
+    }
+
+    public function setHoraire(\DateTimeInterface $horaire): self
+    {
+        $this->horaire = $horaire;
 
         return $this;
     }
