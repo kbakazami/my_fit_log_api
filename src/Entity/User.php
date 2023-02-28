@@ -2,14 +2,47 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ApiResource(
+    operations: [
+        new Get(
+            controller: NotFoundAction::class,
+            output: false,
+            read: false,
+        ),
+        new Get(
+            uriTemplate: '/me',
+            controller: MeController::class,
+            paginationEnabled: false,
+            read: false,
+            name: 'me',
+        ),
+    ],
+    normalizationContext: [
+        'groups' => ['read:User'],
+    ],
+    openapiContext: [
+        'security' => [
+            [
+                'bearerAuth' => [],
+            ],
+        ],
+    ],
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,11 +61,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Groups(['read:User'])]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    #[Groups(['read:User'])]
     public function getEmail(): ?string
     {
         return $this->email;
@@ -58,6 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
+    #[Groups(['read:User'])]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -96,5 +139,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public static function createFromPayload($id, array $payload)
+    {
+        return (new self())->setId($id)->setEmail($payload['email'] ?? '');
     }
 }
