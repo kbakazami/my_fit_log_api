@@ -9,48 +9,57 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class GlucoseController extends AbstractController
 {
     private $entityManager;
+    private $serializer;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
     }
 
     // Toutes les données pour un utilisateur
     #[Route('/glucose/allValues/{id}', name: 'app_glucose_all_values')]
     public function allGlucose($id): Response
-    {
-        $glucose = $this->entityManager->getRepository(Glucose::class)->findOneByUserId($id);
-        // return $this->render('glucose/index.html.twig', [
-        //     'controller_name' => 'GlucoseController',
-        // ]);
+    {   
+        $glucose = $this->entityManager->getRepository(Glucose::class)->findBy(['user' => $id]);
+        dump($glucose);
+        // $jsonData = $serializer->serialize($glucose, 'json');
+        // dump(json_encode($glucose));
 
-        return json_encode($glucose);
+        // return new JsonResponse($jsonData);
+        return $this->render('base.html.twig', [
+            'controller_name' => 'GlucoseController',
+        ]);
     }
 
     // Toutes les données entre deux date
-    #[Route('/glucose/dateGlucose/{id}, {strartdate}, {enddate}', name: 'app_glucose_date')]
-    public function dateGlucose($id, $startDate, $endDate): Response
+    #[Route('/glucose/glucose_btw/{id}/{startdate}/{enddate}', name: 'app_glucose_date')]
+    public function glucoseBtw($id, $startdate, $enddate): Response
     {
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('*')
-            ->from('App\Entity\Glucose')
-            ->where('horaire BETWEEN :startDate AND :endDate')
-            ->andWhere('userId = :id')
-            ->setParameter('startDate', $startDate)
-            ->setParameter('endDate', $endDate)
+        $queryBuilder = $this->entityManager->createQueryBuilder('g');
+        $queryBuilder->select('g')
+            ->from(Glucose::class, 'g')
+            ->where('g.createdAt BETWEEN :startDate AND :endDate')
+            ->andWhere('g.user = :id')
+            ->setParameter('startDate', $startdate)
+            ->setParameter('endDate', $enddate)
             ->setParameter('id', $id);
 
 
         $results = $queryBuilder->getQuery()->getResult();
-        // return $this->render('glucose/index.html.twig', [
-        //     'controller_name' => 'GlucoseController',
-        // ]);
 
-        return json_encode($results);
+        dump($results);
+
+        return $this->render('base.html.twig', [
+            'controller_name' => 'GlucoseController',
+        ]);
+        // return json_encode($results);
     }
 
     // Set une donnée d'une personne
@@ -62,10 +71,10 @@ class GlucoseController extends AbstractController
         $data = json_decode($jsonString, true);
 
         $entity = new Glucose();
-        $entity->setTaux($data['taux']);
-        $entity->setAjeun($date['ajeun']);
-        $entity->setHoraire($data['horaire']);
-        $entity->setUserId($id);
+        $entity->setRate($data['rate']);
+        $entity->setIsFasting($date['isFasting']);
+        $entity->setCreatedAt($data['createdAt']);
+        $entity->setUser($id);
         $entityManager->persist($entity);
         $entityManager->flush();
         // return $this->render('glucose/index.html.twig', [
@@ -79,11 +88,11 @@ class GlucoseController extends AbstractController
     #[Route('/glucose/getLastGlucoas/{id}', name: 'app_glucose_get_last_glucose')]
     public function getLastGlucose($id): Response
     {
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('*')
-            ->from('App\Entity\Glucose')
-            ->Where('userId = :id')
-            ->orderBy('u.id', 'DESC')
+        $queryBuilder = $this->entityManager->createQueryBuilder('g');
+        $queryBuilder->select('g')
+            ->from(Glucose::class, 'g')
+            ->Where('g.user = :id')
+            ->orderBy('g.id', 'DESC')
             ->setMaxResults(1)
             ->setParameter('id', $id);
 
@@ -92,7 +101,11 @@ class GlucoseController extends AbstractController
         // return $this->render('glucose/index.html.twig', [
         //     'controller_name' => 'GlucoseController',
         // ]);
+        dump($results);
+        return $this->render('base.html.twig', [
+            'controller_name' => 'GlucoseController',
+        ]);
 
-        return json_encode($results);
+        // return json_encode($results);
     } 
 }
