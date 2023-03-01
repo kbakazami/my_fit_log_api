@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Alimeentation;
+use App\Entity\AdditionalInformation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Alimeentation>
+ * @extends ServiceEntityRepository<AdditionalInformation>
  *
- * @method Alimeentation|null find($id, $lockMode = null, $lockVersion = null)
- * @method Alimeentation|null findOneBy(array $criteria, array $orderBy = null)
- * @method Alimeentation[]    findAll()
- * @method Alimeentation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AdditionalInformation|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AdditionalInformation|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AdditionalInformation[]    findAll()
+ * @method AdditionalInformation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AlimeentationRepository extends ServiceEntityRepository
+class AdditionalInformationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Alimeentation::class);
+        parent::__construct($registry, AdditionalInformation::class);
     }
 
-    public function save(Alimeentation $entity, bool $flush = false): void
+    public function save(AdditionalInformation $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class AlimeentationRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Alimeentation $entity, bool $flush = false): void
+    public function remove(AdditionalInformation $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class AlimeentationRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Alimeentation[] Returns an array of Alimeentation objects
+//     * @return AdditionalInformation[] Returns an array of AdditionalInformation objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class AlimeentationRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Alimeentation
+//    public function findOneBySomeField($value): ?AdditionalInformation
 //    {
 //        return $this->createQueryBuilder('a')
 //            ->andWhere('a.exampleField = :val')

@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\GlucoseRepository;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\WaterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: GlucoseRepository::class)]
-class Glucose
+#[ORM\Entity(repositoryClass: WaterRepository::class)]
+#[ApiResource]
+class Water
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,15 +17,12 @@ class Glucose
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?float $rate = null;
+    private ?float $quantity = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column]
-    private ?bool $isFasting = null;
-
-    #[ORM\ManyToOne(inversedBy: 'glucoses')]
+    #[ORM\ManyToOne(inversedBy: 'waters')]
     private ?User $user = null;
 
     public function getId(): ?int
@@ -31,14 +30,14 @@ class Glucose
         return $this->id;
     }
 
-    public function getRate(): ?float
+    public function getQuantity(): ?float
     {
-        return $this->rate;
+        return $this->quantity;
     }
 
-    public function setRate(float $rate): self
+    public function setQuantity(float $quantity): self
     {
-        $this->rate = $rate;
+        $this->quantity = $quantity;
 
         return $this;
     }
@@ -51,18 +50,6 @@ class Glucose
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function isIsFasting(): ?bool
-    {
-        return $this->isFasting;
-    }
-
-    public function setIsFasting(bool $isFasting): self
-    {
-        $this->isFasting = $isFasting;
 
         return $this;
     }
