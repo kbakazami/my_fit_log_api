@@ -1,0 +1,6 @@
+App\Entity\MealGoalDay:
+    meal_goal_day_(1..10):
+        waterIntake: <randomFloat(2, 3, 1)>
+        water: <randomFloat(2, 3, 1)>
+        numberMeals: <randomNumber(2, 3)>
+        calorie: <randomNumber(1, 3)>
