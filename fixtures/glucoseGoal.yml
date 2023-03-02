@@ -1,0 +1,6 @@
+App\Entity\GlucoseGoal:
+    glucose_goal_(1..10):
+        glucoseMin: <randomFloat(2, 3, 1)>
+        glucoseMax: <randomFloat(2, 3, 1)>
+        glucoseMinF: <randomFloat(2, 3, 1)>
+        glucoseMaxF: <randomFloat(2, 3, 1)>
