@@ -24,8 +24,6 @@ class WaterController extends AbstractController
         $this->serializer = $serializer;
     }
 
-
-    // ////////////////////////////////////////////////////////////
     #[Route('/api/waterCurrentdate/{id}', name: 'app_water_current_date')]
     public function waterCurrentDate($id): Response
     {
@@ -38,34 +36,11 @@ class WaterController extends AbstractController
             if($currentDate == $date)
             {
 
-                $allWater[$water->getId()]["note"] = $water->getNote();
-                $allWater[$water->getId()]["date"] = $date;
-                $allWater[$water->getId()]['waterType'] = $water->getwaterType()->getName();
-            
-
-                /*
-
-                $water=$water->getwaterFood();
-                foreach($waterFoods as $waterFood){
-                    $foods = $this->entityManager->getRepository(Food::class)->findById($waterFood->getFood()->getId());
-                    foreach($foods as $food){
-                        // dump($food);
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['quantity'] = $waterFood->getQuantity();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['defautGrams'] = $food->getDefaultGrams();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['name'] = $food->getName();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['calorie'] = $food->getCalorie();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['waterIntake'] = $food->getWaterIntake();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['fiber'] = $food->getFiber();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['protein'] = $food->getProtein();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['carbohydrate'] = $food->getCarbohydrate();
-                        $allWater[$water->getId()]['waterFood'][$waterFood->getFood()->getId()]['lipid'] = $food->getLipid();
-                    }
-                }*/
+                $allWater[$water->getId()] = $water;
             }
         }
-        dump($allWater);
-        
-        // return new JsonResponse($allWater);
+        // dump($allWater);
+        return new JsonResponse($allWater);
 
     }
 
