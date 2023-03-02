@@ -21,7 +21,7 @@ class GlucoseGoalController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    // Set objectif d'une personne
+    // Set objectif d'une personne DEPRECIER
     #[Route('/glucose/addObjectifGlucose/{id}', name: 'app_glucose_add_objectif')]
     public function addObjectifGlucose($id): Response
     {
@@ -37,9 +37,7 @@ class GlucoseGoalController extends AbstractController
         $entity->addUser($id);
         $entityManager->persist($entity);
         $entityManager->flush();
-        // return $this->render('glucose/index.html.twig', [
-        //     'controller_name' => 'GlucoseController',
-        // ]);
+      
 
         return $this->json(['message' => 'Données enregistrées avec succès.']);
     }
@@ -59,10 +57,11 @@ class GlucoseGoalController extends AbstractController
         return $this->render('base.html.twig', [
             'controller_name' => 'GlucoseController',
         ]);
-        // return json_encode($objectifGlucose);
+
+        return new JsonResponse($glucoseGoal);
     }
  
-    //Update objectif d'une personne
+    //Update objectif d'une personne DEPRECIE
     #[Route('/glucose/updateObjectifGlucose/{id}', name: 'app_glucose_update_objectif')]
     public function updateObjectifGlucose($id): Response
     {
@@ -73,7 +72,7 @@ class GlucoseGoalController extends AbstractController
         $objectifGlucose = $this->entityManager->getRepository(ObjectifGlucose::class)->findOneByUserId($id);
 
         $objectifGlucose->setGlucoseMin($data['glucoseMin']);
-        $objectifGlucose->setGlucoseMax($date['glucoseMax']);
+        $objectifGlucose->setGlucoseMax($data['glucoseMax']);
         $objectifGlucose->setGlucoseMinF($data['glucoseMinF']);
         $objectifGlucose->setGlucoseMaxF($data['glucoseMaxF']);
         $this->entityManager->flush();

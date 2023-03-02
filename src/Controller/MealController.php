@@ -51,11 +51,7 @@ class MealController extends AbstractController
                 }
             }
         }
-        dump($allMealFood);
-        
-        return $this->render('base.html.twig', [
-            'controller_name' => 'GlucoseController',
-        ]);
+        return new JsonResponse($allMealFood);
     }
 
     //Tout les repas de la journée
@@ -92,11 +88,7 @@ class MealController extends AbstractController
                 }
             }
         }
-        dump($allMealFood);
-        
-        return $this->render('base.html.twig', [
-            'controller_name' => 'GlucoseController',
-        ]);
+        return new JsonResponse($allMealFood);
     }
 
     //Tout les repas entre deux dates
@@ -132,14 +124,10 @@ class MealController extends AbstractController
                 }
             }
         }
-        dump($allMealFood);
-        
-        return $this->render('base.html.twig', [
-            'controller_name' => 'GlucoseController',
-        ]);
+        return new JsonResponse($allMealFood);
     }
 
-    //Ajouter un repas
+    //Ajouter un repas DEPRECIER
     #[Route('/api/addMeal/{id}', name: 'app_meal_add')]
     public function addMeal($id): Response
     {

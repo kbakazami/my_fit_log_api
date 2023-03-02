@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 
+
 class GlucoseController extends AbstractController
 {
     private $entityManager;
@@ -31,10 +32,7 @@ class GlucoseController extends AbstractController
         // $jsonData = $serializer->serialize($glucose, 'json');
         // dump(json_encode($glucose));
 
-        // return new JsonResponse($jsonData);
-        return $this->render('base.html.twig', [
-            'controller_name' => 'GlucoseController',
-        ]);
+        return new JsonResponse($glucose);
     }
 
     // Toutes les données entre deux date
@@ -52,16 +50,10 @@ class GlucoseController extends AbstractController
 
 
         $results = $queryBuilder->getQuery()->getResult();
-
-        dump($results);
-
-        return $this->render('base.html.twig', [
-            'controller_name' => 'GlucoseController',
-        ]);
-        // return json_encode($results);
+        return new JsonResponse($results);
     }
 
-    // Set une donnée d'une personne
+    // Set une donnée d'une personne DEPRECIER
     #[Route('/glucose/addGlucose/{id}', name: 'app_glucose_add_glucose')]
     public function addGlucose($id): Response
     {
@@ -71,7 +63,7 @@ class GlucoseController extends AbstractController
 
         $entity = new Glucose();
         $entity->setRate($data['rate']);
-        $entity->setIsFasting($date['isFasting']);
+        $entity->setIsFasting($data['isFasting']);
         $entity->setCreatedAt($data['createdAt']);
         $entity->setUser($id);
         $entityManager->persist($entity);
@@ -97,14 +89,7 @@ class GlucoseController extends AbstractController
 
 
         $results = $queryBuilder->getQuery()->getResult();
-        // return $this->render('glucose/index.html.twig', [
-        //     'controller_name' => 'GlucoseController',
-        // ]);
-        dump($results);
-        return $this->render('base.html.twig', [
-            'controller_name' => 'GlucoseController',
-        ]);
+        return new JsonResponse($results);
 
-        // return json_encode($results);
     } 
 }
