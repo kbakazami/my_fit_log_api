@@ -6,7 +6,9 @@ use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Controller\MeController;
+use App\Controller\RegisterController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,6 +35,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             read: false,
             name: 'me',
         ),
+        new Post(
+            uriTemplate: '/register',
+            name: 'register',
+        )
     ],
     normalizationContext: [
         'groups' => ['read:User'],
